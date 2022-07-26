@@ -9,5 +9,5 @@
 	2. Launcher_RTS2022DEMO_Legacy.py import a FILE_OpenFOAM.py and JOB_OpenFOAM.py
 	3. submit_script_1.py and submit_script_2.py were provided by Srinivas
 
-# How to & Short introduction
-	[Tutorial for Custom UI](https://docs.google.com/presentation/d/1zf1rYXTgzmCy9pcB-Pcyf0foMwazDbO9AONZEyrCpkE/edit?usp=sharing) 
+# Tutorial for Custom UI
+<https://docs.google.com/presentation/d/1zf1rYXTgzmCy9pcB-Pcyf0foMwazDbO9AONZEyrCpkE/edit?usp=sharing>
