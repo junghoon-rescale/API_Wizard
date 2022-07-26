@@ -21,37 +21,19 @@ global apibaseurl
 global apikey
 global token
 global cwd
+global csvfile
 #   If necessary, change the apibaseurl
 apibaseurl = "https://kr.rescale.com"
 #   You should use your api key
 apikey = "e96bf8ccc9d38ee9045c060349d312bd5bceeb11"
 token = "Token " + apikey
 cwd = os.getcwd()
-
+#   If your OS is not windows, you need to change the "\\"
+csvfile = cwd + "\\Job_Summary.csv"
 
 # section 1.1
 #   Write a job info csv file for monitoring the status
-def writeinitfile():
-    global csvfile
-    # If your OS is not windows, you need to change the "\\"
-    csvfile = cwd + "\\Job_Summary.csv"
-    column_names = [
-        ['ID', 'STATUS'],
-    ]
-    # If the job info csv file is not existing, it would be made at current directory
-    if (not (os.path.exists(csvfile))):
-        f = open(csvfile, 'w', newline='')
-        writer = csv.writer(f)
-        writer.writerows(column_names)
-        f.close()
-    # If the job info csv file is already existing, it would be read a job info from csv file
-    else:
-        f = open(csvfile, 'r')
-        reader = csv.reader(f)
-        for row in reader:
-            print(row)
-        f.close()
-writeinitfile()
+GUI_LAUNCHER_MODULE.writeinitfile(csvfile)
 
 
 # section 1.2

@@ -4,8 +4,27 @@ import sys
 import csv
 import os
 
+# Function: create a csv file for logging the job information
+def writeinitfile(csvfile):
+    column_names = [
+        ['ID', 'STATUS'],
+    ]
+    # If the job info csv file is not existing, it would be made at current directory
+    if (not (os.path.exists(csvfile))):
+        f = open(csvfile, 'w', newline='')
+        writer = csv.writer(f)
+        writer.writerows(column_names)
+        f.close()
+    # If the job info csv file is already existing, it would be read a job info from csv file
+    else:
+        f = open(csvfile, 'r')
+        reader = csv.reader(f)
+        for row in reader:
+            print(row)
+        f.close()
 
-# Function: make job
+
+# Function: make a OpenFOAM job through OpenFOAM+
 def make_job(apibaseurl, token, inputfile_id):
     makejob_url = apibaseurl + '/api/v2/jobs/'
     if (inputfile_id != None):
