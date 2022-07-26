@@ -1,22 +1,19 @@
 import requests
 import json
 import sys
-import time
 import csv
 
 
 # Function: make job
-def make_job(apibaseurl, token, inputfile_name, inputfile_id, jobname, lowpriority, software, version,
-             nslots_basic, coretype, ncores, walltime, project_code):
+def make_job(apibaseurl, token, inputfile_id):
     makejob_url = apibaseurl + '/api/v2/jobs/'
-    inpname = inputfile_name.split(".")[0]
     if (inputfile_id != None):
         makejob = requests.post(
             makejob_url,
             headers={'Authorization': token},
             json={
-                'isLowPriority': lowpriority,
-                'name': jobname,
+                'isLowPriority': 'false',
+                'name': 'Job from Custom UI',
                 'jobanalyses': [
                     {
                         'envVars': {},
@@ -25,20 +22,19 @@ def make_job(apibaseurl, token, inputfile_name, inputfile_id, jobname, lowpriori
                         'userDefinedLicenseSettings': {
                             'featureSets': []
                         },
-                        'command': 'export OMP_NUM_THREADS=$RESCALE_CORES_PER_SLOT' + '\n' +
-                                   'dos2unix' + ' ' + inpname + '.inp' + '\n' +
-                                   'calculixMT' + ' ' + inpname + '\n' +
-                                   'zip -r ' + jobname + '.zip * -x "*shared*" "*tmp"' + '\n' +
+                        'command': 'cd airfoil2D' + '\n' +
+                                    './Allrun' + '\n' +
+                                   'zip -r outputs.zip * -x "*tmp"' + '\n' +
                                    'find . -name "*.zip" -prune -o -name "*.log" -prune -o -exec rm -rf {} \;',
                         'analysis': {
-                            'code': software,
-                            'version': version
+                            'code': 'openfoam_plus',
+                            'version': 'v1706+-intelmpi'
                         },
                         'hardware': {
-                            'coresPerSlot': ncores,
-                            'walltime': walltime,
-                            'slots': nslots_basic,
-                            'coreType': coretype,
+                            'coresPerSlot': '4',
+                            'walltime': '24',
+                            'slots': '1',
+                            'coreType': 'emerald',
                         },
                         'inputFiles': [
                             {
@@ -47,7 +43,7 @@ def make_job(apibaseurl, token, inputfile_name, inputfile_id, jobname, lowpriori
                         ],
                     },
                 ],
-                'projectId': project_code,
+                'projectId': 'BKuia',
             },
         )
         if (makejob.status_code != 201):
@@ -77,15 +73,9 @@ def submit_job(apibaseurl, token, job_id):
         print('Job submission is failed with error')
 
 
-# Status update를 위하여 파일에 내용을 기입하는 함수
-def timestamps_job():
-    timestamps_raw = time.time()
-    submit_date = time.ctime(timestamps_raw)
-
-
-def appenddata_job(csvfile, job_id, jobname, submit_date):
+def appenddata_job(csvfile, job_id):
     data = [
-        [job_id, jobname, submit_date, ""],
+        [job_id, ""],
     ]
     f = open(csvfile, 'a', newline='')
     writer = csv.writer(f)

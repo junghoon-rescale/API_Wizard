@@ -21,7 +21,7 @@ root.title("Rescale API Wizard for CalculiX")
 root.geometry("1200x600")
 
 # If you want to make a executable file through pyinstaller, cacert should be located in the same directory
-os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), 'cacert.pem')
+#os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), 'cacert.pem')
 # Define a variables for using the API
 global apibaseurl
 global apikey
@@ -171,31 +171,23 @@ job_name.insert(0, "Input the job name")
 ###################################################################################################
 
 # Define the list of software version
-list_version = ["2022r1", "2021r2", "2021r1", "2020r2", "2020r1", "2019r3"]
-swversion = ttk.Combobox(job_frame, width=8, height=3, value=list_version, state="readonly")
+list_version = ["2.17-pardiso", "2.17-spooles", "2.15"]
+swversion = ttk.Combobox(job_frame, width=15, height=3, value=list_version, state="readonly")
 swversion.current(0)
 swversion.set("Version")
 swversion.pack(side="left", padx=5, pady=5)
 
 # Define the list of coretype configuration(Coretype:Number of Cores)
-list_config = ["carbon:132", "carbon:484", "jasper:120", "jasper:480", "peridot:132", "peridot:484",
-               "emerald:8", "emerald:36", "calcite:8", "calcite:32", "chromium:8", "chromium:32"]
-hwconfig = ttk.Combobox(job_frame, width=14, height=3, value=list_config, state="readonly")
+list_config = ["emerald:8", "emerald:36", "hessonite:6", "hessonite:12", "hessonite:18", "hessonite:24"]
+hwconfig = ttk.Combobox(job_frame, width=20, height=6, value=list_config, state="readonly")
 hwconfig.set("Coretype config")
 hwconfig.pack(side="left", padx=5, pady=5)
 
-# Define the list of license feature
-list_license_feature = ["cfd_solve_level3", "cfd_solve_level2", "cfd_solve_level1"]
-usfconfig = ttk.Combobox(job_frame, width=14, height=3, value=list_license_feature, state="readonly")
-usfconfig.current(0)
-usfconfig.set("License feature")
-usfconfig.pack(side="left", padx=5, pady=5)
-
 # Define the list of project in workspace
-list_projects = ["Project A", "Project B", "Project C", "Project D", "Project E"]
-list_projectcode = ["a", "b", "c", "d", "e"]
+list_projects = ["Hyunguk_Test", "Junghoon_Test"]
+list_projectcode = ["gkpAo", "BKuia"]
 dict_projects = {name: value for name, value in zip(list_projects, list_projectcode)}
-projects = ttk.Combobox(job_frame, width=14, height=3, value=list_projects, state="readonly")
+projects = ttk.Combobox(job_frame, width=14, height=2, value=list_projects, state="readonly")
 projects.current(0)
 projects.set("Project")
 projects.pack(side="left", padx=5, pady=5)
@@ -209,35 +201,19 @@ def submit_job():
     global submit_date
     submit_date = ""
     jobname = str(job_name.get())
-    software = "ansys_fluent"
+    software = "calculix"
     version = str(swversion.get())
     hwsetting = str(hwconfig.get())
     coretype = hwsetting.split(":")[0]
     ncores = hwsetting.split(":")[1]
     walltime = "72"
-    lowpriority = "true"
+    lowpriority = "false"
     nslots_basic = "1"
-    ansyslmd = "PORT@HOSTNAME"
-    ansysli = "PORT@HOSTNAME"
-    lm_project = ""
-    ansysli_lcp = "0"
-    ansys_elastic_cls = ""
     project_code = dict_projects.get(str(projects.get()))
     # adflag = str(autodown.get()) : this is flag for enabling the automatic download, so this is not available for now
-    usf_solver = str(usfconfig.get())
-    # Getting a number of cores, and assign the number of hpcpacks for enabling the license queueing feature
-    if int(ncores) <= 12:
-        usf_hpcpack ="1"
-    elif int(ncores) >= 32 and int(ncores) <= 36:
-        usf_hpcpack = "2"
-    elif int(ncores) >= 120 and int(ncores) <= 132:
-        usf_hpcpack = "3"
-    elif int(ncores) >= 480 and int(ncores) <= 516:
-        usf_hpcpack = "4"
     # Get the job ID after you submit the job
-    job_id = JOBcalculix.make_job(apibaseurl, token, inputfile_name, inputfile_id, jobname, lowpriority, software, version,
-             ansyslmd, ansysli, lm_project, ansysli_lcp, ansys_elastic_cls, usf_solver, usf_hpcpack,
-             nslots_basic, coretype, ncores, walltime, project_code)
+    job_id = JOBcalculix.make_job(apibaseurl, token, inputfile_name, inputfile_id, jobname, lowpriority, software,
+                                  version, nslots_basic, coretype, ncores, walltime, project_code)
     print('The job ID is ' + job_id)
     JOBcalculix.submit_job(apibaseurl, token, job_id)
     submit_date = time.ctime(time.time())
@@ -257,7 +233,6 @@ def clear_settings():
     # autodown.set("Automatic Download")
     swversion.set("Version")
     hwconfig.set("Coretype config")
-    usfconfig.set("License feature")
     projects.set("Project")
     btn_submit.configure(bg="#f0f0f0")
 
@@ -304,7 +279,7 @@ def status_job():
     global completed_job_temp
     inprogress_job_temp = []
     completed_job_temp = []
-    f = open(csvfile, 'w' , newline='')
+    f= open(csvfile, 'w', newline='')
     writer = csv.writer(f)
     writer.writerows(job_line)
     f.close()
