@@ -49,13 +49,13 @@ def add_file():
     if files =="":
         msgbox.showwarning("Warning", "You should add a input file")
     else:
-        global inputfilefull
+        #global inputfilefull
         global inputfile
         global save_path
         for file in files:
             list_file.insert(END, file)
-            inputfilefull = file
-            save_path = os.path.dirname(inputfilefull)
+            inputfile = file 
+            save_path = os.path.dirname(inputfile)
         btn_upload.configure(bg="#f0f0f0", fg="black")
 #   Make a button for selecting the input file
 btn_add_file = Button(file_frame, text="Select file", padx=5, pady=5, width=10, command=add_file)
