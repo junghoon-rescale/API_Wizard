@@ -23,4 +23,4 @@ The license queueing feature could be enabled automatically
   You can run the executable which could be made using PyInstaller package
 
 # Reference
-  User guide(For now, Korean only): https://docs.google.com/presentation/d/1Gjxasp8udsrodzsK74-JSYt5NXqsImOWDuJAMUFBOHM/edit?usp=sharing
+  User guide(Written in Korean): https://docs.google.com/presentation/d/1Gjxasp8udsrodzsK74-JSYt5NXqsImOWDuJAMUFBOHM/edit?usp=sharing
