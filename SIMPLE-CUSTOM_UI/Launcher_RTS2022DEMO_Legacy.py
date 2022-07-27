@@ -23,9 +23,9 @@ global apikey
 global token
 global cwd
 #   If necessary, change the apibaseurl
-apibaseurl = "https://kr.rescale.com"
+apibaseurl = "<Your API base(Prod)>"
 #   You should use your api key
-apikey = "e96bf8ccc9d38ee9045c060349d312bd5bceeb11"
+apikey = "<Your Personal API Key>"
 token = "Token " + apikey
 cwd = os.getcwd()
 

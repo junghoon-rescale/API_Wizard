@@ -23,9 +23,9 @@ global token
 global cwd
 global csvfile
 #   If necessary, change the apibaseurl
-apibaseurl = "https://kr.rescale.com"
+apibaseurl = "<Your API base(Prod)>"
 #   You should use your api key
-apikey = "e96bf8ccc9d38ee9045c060349d312bd5bceeb11"
+apikey = "<Your Personal API Key>"
 token = "Token " + apikey
 cwd = os.getcwd()
 #   If your OS is not windows, you need to change the "\\"
