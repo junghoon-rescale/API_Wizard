@@ -3,7 +3,8 @@
 # Prerequisites
 	1. Python 3.9(recommended)
 	2. Install the requests
-	3. Install the pyinstaller(Optional)
+	3. Install the certifi
+	4. Install the pyinstaller(Optional)
 
 # Files for DEMO session
 	1. Launcher_RTS2022DEMO.py
