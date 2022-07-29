@@ -79,7 +79,7 @@ def make_job(apibaseurl, token, inputfile_id):
     return job_id
 
 
-# 앞서 생성한 작업을 Submit
+# Function: Submit the created job
 def submit_job(apibaseurl, token, job_id):
     submitjob_url = apibaseurl + '/api/v2/jobs/' + job_id + '/submit/'
     submitjob = requests.post(
@@ -92,7 +92,7 @@ def submit_job(apibaseurl, token, job_id):
         error_code = submitjob.status_code
         print('Job submission is failed with error')
 
-
+# Function: Add a new job information to Job_Summary.csv
 def appenddata_job(csvfile, job_id):
     data = [
         [job_id, ""],
@@ -102,7 +102,7 @@ def appenddata_job(csvfile, job_id):
     writer.writerows(data)
     f.close()
 
-
+# Function: Upload the inputfile
 def upload_inputfile(apibaseurl, token, inputfile):
     upload_url = apibaseurl + '/api/v2/files/contents/'
     try:
@@ -124,7 +124,7 @@ def upload_inputfile(apibaseurl, token, inputfile):
         exit(1)
     return inputfile_id
 
-
+# Function: Download a result(Filtering only *.zip file)
 def download_results(apibaseurl, token, job_id, save_path):
     postjob_url = apibaseurl + '/api/v2/jobs/' + job_id + '/files/'
     current_page = 1
@@ -138,7 +138,7 @@ def download_results(apibaseurl, token, job_id, save_path):
         postoutput_files_dict = json.loads(postoutput_files.text)
         #    print(postoutput_files_dict)
         postcount = postoutput_files_dict['count']
-        #   10개까지의 Output file 정보를 목록으로 저장
+        #   Svae the information of output file up to 10
         if current_page == 1:
             postoutputfileid = [0 for i in range(postcount)]
             postoutputfilename = [0 for i in range(postcount)]
@@ -158,7 +158,7 @@ def download_results(apibaseurl, token, job_id, save_path):
                 postoutputfileid[i] = postoutput_files_dict['results'][i]['id']
                 postoutputfilename[i] = postoutput_files_dict['results'][i]['name']
                 postoutputfileurl[i] = postoutput_files_dict['results'][i]['downloadUrl']
-        #   Output file의 수가 10개 이상일 경우 index 정보를 수정하여 목록으로 저장
+        #   If the number of output file is above 10, modifying the index information for saving
         elif postcount < current_page * 10 and postcount > 10:
             indexup = (current_page - 1) * 10
             uplimit = postcount % indexup
@@ -172,15 +172,14 @@ def download_results(apibaseurl, token, job_id, save_path):
                 postoutputfileid[i + indexup] = postoutput_files_dict['results'][i]['id']
                 postoutputfilename[i + indexup] = postoutput_files_dict['results'][i]['name']
                 postoutputfileurl[i] = postoutput_files_dict['results'][i]['downloadUrl']
-        #   Output file의 수가 10개 이상일 경우 다음 10개의 정보 확인을 위하여 while 루프를 추가로 순환
+        #   If the number of output file is above 10, it will be repeated up to the last page
         if (postoutput_files_dict['next'] == None):
             last_page = True
         else:
             current_page += 1
-    #   전체 Output file들의 목록을 확인하면 while 루프 탈출
-    #   Post-processing job에서 생성된 파일의 이름과 ID만 추출하여 새로운 Dictionary 생성
+    #   Create a dictionary including the name of file and id
     output_files_info = dict(zip(postoutputfilename, postoutputfileid))
-    #   파일 목록에서 결과 파일에 해당되는 항목을 검색하여 key 및 value 저장
+    #   In the list of file, search a output files and save the key and value
     outputfileextension = ['.zip']
     outputfileidlist = []
     for i in outputfileextension:
@@ -188,19 +187,19 @@ def download_results(apibaseurl, token, job_id, save_path):
         for j in output_files_info.keys():
             if search in j:
                 outputfileidlist.append(output_files_info.get(j))
-    #   '.zip' 확장자를 가진 파일의 id 확인
+    #   Check the id of '*.zip' file
     processingfile_id = outputfileidlist[0]
     for key, value in output_files_info.items():
         if value == processingfile_id:
             processingfile_name = key
-    #   앞서 확인한 파일의 id로 파일 이름을 확인
+    #   Check the file name of previous step
     save_folder = os.path.join(save_path, job_id)
     print(save_folder)
     if (not (os.path.exists(save_folder))):
         os.makedirs(save_folder)
     os.chdir(save_folder)
-    #   기존에 동일한 이름으로 생성된 폴더가 없을 경우 생성 후 이동
-    # ++++Post-processing job의 결과 파일을 다운로드++++#
+    #   If there is no existing folder, make the folder
+    #   Download the file
     outputfile_url = apibaseurl + '/api/v2/files/' + processingfile_id + '/contents/'
     response = requests.get(
         outputfile_url,

@@ -3,14 +3,15 @@ import tkinter.messagebox as msgbox
 from tkinter import *
 from tkinter import filedialog
 import os
+import sys
 import csv
 import requests
 import json
 import GUI_LAUNCHER_MODULE
 
-
-# If you want to make a executable file through pyinstaller, cacert should be located in the same directory
-# os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), 'cacert.pem')
+# If you want to make a executable file through pyinstaller
+# cacert.pem should be located in the same directory with executable
+os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), 'cacert.pem')
 
 # section 1.0
 root = Tk()
@@ -23,14 +24,13 @@ global token
 global cwd
 global csvfile
 #   If necessary, change the apibaseurl
-apibaseurl = "<Your API base(Prod)>"
+apibaseurl = "<Input your api base url>"
 #   You should use your api key
-apikey = "<Your Personal API Key>"
+apikey = "<Input your personal API Key>"
 token = "Token " + apikey
 cwd = os.getcwd()
 #   If your OS is not windows, you need to change the "\\"
 csvfile = cwd + "\\Job_Summary.csv"
-
 # section 1.1
 #   Write a job info csv file for monitoring the status
 GUI_LAUNCHER_MODULE.writeinitfile(csvfile)

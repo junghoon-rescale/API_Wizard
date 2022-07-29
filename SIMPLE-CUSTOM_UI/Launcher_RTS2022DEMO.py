@@ -3,6 +3,7 @@ import tkinter.messagebox as msgbox
 from tkinter import *
 from tkinter import filedialog
 import os
+import sys
 import csv
 import requests
 import json
@@ -10,7 +11,7 @@ import GUI_LAUNCHER_MODULE
 
 
 # If you want to make a executable file through pyinstaller, cacert should be located in the same directory
-# os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), 'cacert.pem')
+os.environ['REQUESTS_CA_BUNDLE'] = os.path.join(os.path.dirname(sys.argv[0]), 'cacert.pem')
 
 # section 1.0
 root = Tk()
