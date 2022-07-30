@@ -176,6 +176,7 @@ def download_job():
     status = selected_completed_job[1]
     if status == 'Completed':
         GUI_LAUNCHER_MODULE.download_results(apibaseurl, token, job_id, save_path)
+        print("The download of job ID: " + job_id + "  is done")
     else:
         print("The job should be completed before you try to download it")
 
