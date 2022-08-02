@@ -208,4 +208,3 @@ def download_results(apibaseurl, token, job_id, save_path):
     with open(processingfile_name, 'wb') as fd:
         for chunk in response.iter_content(chunk_size=1024 * 1024):
             fd.write(chunk)
-
